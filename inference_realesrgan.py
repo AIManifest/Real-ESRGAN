@@ -2,6 +2,8 @@ import argparse
 import cv2
 import glob
 import os
+import time
+from tqdm.autonotebook import tqdm
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 
@@ -130,9 +132,12 @@ def main():
     else:
         paths = sorted(glob.glob(os.path.join(args.input, '*')))
 
-    for idx, path in enumerate(paths):
+    with tqdm(total=len(paths),ncols=100,colour='red',position=0,leave=True) as pbar:
+      for idx, path in tqdm(enumerate(paths), position=0, leave=True):
         imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
+        time.sleep(0.01)
+        pbar.update(1)
+        #print('Testing', idx, imgname)
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if len(img.shape) == 3 and img.shape[2] == 4:
