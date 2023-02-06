@@ -10,18 +10,15 @@ import torch
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 from os import path as osp
-from tqdm import tqdm
+from tqdm.autonotebook import tqdm
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
-try:
-    import ffmpeg
-except ImportError:
-    import pip
-    pip.main(['install', '--user', 'ffmpeg-python'])
-    import ffmpeg
 
+
+    
+import ffmpeg
 
 def get_video_meta_info(video_path):
     ret = {}
@@ -252,7 +249,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     fps = reader.get_fps()
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
-    pbar = tqdm(total=len(reader), unit='frame', desc='inference')
+    pbar = tqdm(total=len(reader), ncols = 100, colour = 'green', unit='frame', desc='inference')
     while True:
         img = reader.get_frame()
         if img is None:
@@ -295,7 +292,7 @@ def run(args):
     ctx = torch.multiprocessing.get_context('spawn')
     pool = ctx.Pool(num_process)
     os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
-    pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
+    pbar = tqdm(total=num_process, ncols=100, colour = 'green', unit='sub_video', desc='inference')
     for i in range(num_process):
         sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.mp4')
         pool.apply_async(
@@ -388,7 +385,7 @@ def main():
         args.extract_frame_first = False
 
     run(args)
-
+    print("..Video Upscaling Has Completed..File Saved to ", args.output, f"{args.video_name}_{args.suffix}.mp4")
     if args.extract_frame_first:
         tmp_frames_folder = osp.join(args.output, f'{args.video_name}_inp_tmp_frames')
         shutil.rmtree(tmp_frames_folder)
