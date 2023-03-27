@@ -338,5 +338,5 @@ def upscale_video(args):
     run(args)
     print("..Video Upscaling Has Completed..File Saved to ", args.output_path, f"{args.video_name}_{args.suffix}.mp4")
     if args.extract_frame_first:
-        tmp_frames_folder = osp.join(args.output_path, f'{args.video_name}_inp_tmp_frames')
+        tmp_frames_folder = osp.join(args.output, f'{args.video_name}_inp_tmp_frames')
         shutil.rmtree(tmp_frames_folder)
