@@ -247,7 +247,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     fps = reader.get_fps()
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
-    pbar = tqdm(total=len(reader), ncols = 100, colour = 'green', unit='frame', desc='inference')
+    pbar = tqdm(total=len(reader), unit='frame', desc='inference')
     while True:
         img = reader.get_frame()
         if img is None:
@@ -290,7 +290,7 @@ def run(args):
     ctx = torch.multiprocessing.get_context('spawn')
     pool = ctx.Pool(num_process)
     os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
-    pbar = tqdm(total=num_process, ncols=100, colour = 'green', unit='sub_video', desc='inference')
+    pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
     for i in range(num_process):
         sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.mp4')
         pool.apply_async(
