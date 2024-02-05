@@ -224,6 +224,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         pre_pad=args.pre_pad,
         half=not args.fp32,
         device=device,
+        gpu_id=args.gpu_id
     )
 
     if 'anime' in args.model_name and args.face_enhance:
@@ -285,6 +286,8 @@ def run(args):
     num_gpus = torch.cuda.device_count()
     num_process = num_gpus * args.num_process_per_gpu
     if num_process == 1:
+        print(args.num_process_per_gpu)
+        print('Running Single Video Inference')
         inference_video(args, video_save_path)
         return
 
